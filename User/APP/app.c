@@ -350,6 +350,7 @@ static  void  AppTask_4 ( void * p_arg )//电量监测
 	{
 		Electricity_monitoring();//电量监测函数
 		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );
+		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );
 	}
 		
 }
