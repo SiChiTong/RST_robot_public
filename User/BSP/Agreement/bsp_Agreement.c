@@ -32,6 +32,40 @@ void dt_send(uint16_t a,uint8_t b);//回复010A指令
 void dt_send1(uint16_t a,uint8_t b);//回复010B指令
 void dt_send2(uint16_t a,uint8_t b);//回复010D指令
 
+
+
+static void jiasu(u8 j)
+{
+	if(j >= 0)
+	{
+		if(j<=10)
+		{
+			data=10 - j;
+		  dt_send(data,4);
+			Motor_Speed_Set(j);
+		}
+	}
+		
+}
+
+
+static void jiansu(u8 j)
+{
+	if(j >= 0)
+	{
+		if(j<=10)
+		{
+			data=10 - j;
+		  dt_send(data,5);
+			Motor_Speed_Set(j);
+		}
+	}
+		
+}
+
+
+
+
  
  void tcp_Agreement(char * pRecStr)
  {
@@ -86,140 +120,12 @@ void dt_send2(uint16_t a,uint8_t b);//回复010D指令
 				 else if(*(pRecStr+4)=='0'&&*(pRecStr+5)=='4'&&flag1 ==0&&flag==1)//加速指令
 				 {
 					 j--;//j表示与速度相对应（自己设定它的值）
-					 if(j<=1)
-					 {
-						 j=1;
-						 data=1;
-						 dt_send(data,4);//下位机的回发数据
-						 Motor_Speed_Set(1);
-					 }
-					 if(j==2)
-					 {
-						  data=2;
-						 dt_send(data,4);//下位机的回发数据
-						 Motor_Speed_Set(2);
-						
-					 }
-					 if(j==3)
-					 {
-						 data=3;
-						 dt_send(data,4);
-						 Motor_Speed_Set(3); 
-					 }
-					 if(j==4)
-					 {
-						  data=4;
-						 dt_send(data,4);
-						 Motor_Speed_Set(4);
-					 }
-					 if(j==5)
-					 {
-						  data=5;
-						 dt_send(data,4);
-						 Motor_Speed_Set(5);
-						 
-					 }
-					 if(j==6)
-					 {
-						  data=6;
-						 dt_send(data,4);
-						 Motor_Speed_Set(6);
-					 }
-					 if(j==7)
-					 {
-						  data=7;
-						 dt_send(data,4);
-						 Motor_Speed_Set(7);
-					 }
-					 if(j==8)
-					 {
-						  data=8;
-						 dt_send(data,4);
-						 Motor_Speed_Set(8);
-					 }
-					 if(j==9)
-					 {
-						  data=4;
-						 dt_send(data,4);
-						 Motor_Speed_Set(9);
-					 }
-					 
-					 if(j>=10)
-					 {
-						 j=10;
-						 data=10;
-						 dt_send(data,4);
-						 Motor_Speed_Set(10);
-					 }
+					 jiasu(j);
 				 }
 				 else if(*(pRecStr+4)=='0'&&*(pRecStr+5)=='5'&&flag1 ==0&&flag==1)//减速指令
 				 {
 					 j++;
-					 if(j<=1)
-					 {
-						 j=1;
-						 data=1;
-						 dt_send(data,5);//下位机的回发数据
-						 Motor_Speed_Set(1);
-					 }
-					 if(j==2)
-					 {
-						  data=2;
-						 dt_send(data,5);//下位机的回发数据
-						 Motor_Speed_Set(2);
-						
-					 }
-					 if(j==3)
-					 {
-						 data=3;
-						 dt_send(data,5);
-						 Motor_Speed_Set(3); 
-					 }
-					 if(j==4)
-					 {
-						  data=4;
-						 dt_send(data,5);
-						 Motor_Speed_Set(4);
-					 }
-					 if(j==5)
-					 {
-						  data=5;
-						 dt_send(data,5);
-						 Motor_Speed_Set(5);
-						 
-					 }
-					 if(j==6)
-					 {
-						  data=6;
-						 dt_send(data,5);
-						 Motor_Speed_Set(6);
-					 }
-					 if(j==7)
-					 {
-						  data=7;
-						 dt_send(data,5);
-						 Motor_Speed_Set(7);
-					 }
-					 if(j==8)
-					 {
-						  data=8;
-						 dt_send(data,5);
-						 Motor_Speed_Set(8);
-					 }
-					 if(j==9)
-					 {
-						  data=4;
-						 dt_send(data,5);
-						 Motor_Speed_Set(9);
-					 }
-					 if(j>=10)
-					 {
-						 j=10;
-						 data=10;
-						 dt_send(data,5);
-						 Motor_Speed_Set(10);
-					 }
-					 
+					 jiansu(j);														 
 				 }
 				 else if(*(pRecStr+4)=='0'&&*(pRecStr+5)=='6'&&flag1 ==0&&flag==1)//正向指令
 				 {
@@ -417,5 +323,7 @@ void dt_send2(uint16_t a,uint8_t b)//a代表数据位b代表指令
 	 HexToStr(str,data_send,  cnt);
 	//sstr=s_str(data_send,cnt,str);
 }
+
+
 
 

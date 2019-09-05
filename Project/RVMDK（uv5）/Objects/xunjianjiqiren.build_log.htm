@@ -27,12 +27,17 @@ Project File Date:  08/27/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 1 (build 61)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target '巡检机器人'
-compiling app.c...
+compiling bsp_Agreement.c...
+..\..\User\BSP\Agreement\bsp_Agreement.c(39): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if(j >= 0)
+..\..\User\BSP\Agreement\bsp_Agreement.c(54): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if(j >= 0)
+..\..\User\BSP\Agreement\bsp_Agreement.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=35140 RO-data=864 RW-data=848 ZI-data=50816  
+Program Size: Code=34628 RO-data=864 RW-data=848 ZI-data=50816  
 FromELF: creating hex file...
 After Build - User command #1: fromelf --bin --output ./Objects/xunjianjiqiren.bin  ./Objects/xunjianjiqiren.axf
-".\Objects\xunjianjiqiren.axf" - 0 Error(s), 0 Warning(s).
+".\Objects\xunjianjiqiren.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\巡检机器人\CODE\git\Project\RVMDK（uv5）\RTE
