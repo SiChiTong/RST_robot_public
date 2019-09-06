@@ -29,3 +29,7 @@
 .\objects\bsp_advancetim.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 .\objects\bsp_advancetim.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 .\objects\bsp_advancetim.o: ..\..\Libraries\FWlib\inc\misc.h
+.\objects\bsp_advancetim.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_advancetim.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_advancetim.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_advancetim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

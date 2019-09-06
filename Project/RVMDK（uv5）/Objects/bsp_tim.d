@@ -29,9 +29,11 @@
 .\objects\bsp_tim.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 .\objects\bsp_tim.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 .\objects\bsp_tim.o: ..\..\Libraries\FWlib\inc\misc.h
+.\objects\bsp_tim.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_tim.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_tim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\bsp_tim.o: ..\..\User\APP\includes.h
 .\objects\bsp_tim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
-.\objects\bsp_tim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\bsp_tim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\bsp_tim.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\bsp_tim.o: ..\..\User\uC-CPU\ARM-Cortex-M3\RealView\cpu.h
@@ -59,7 +61,6 @@
 .\objects\bsp_tim.o: ..\..\User\BSP\i2c\bsp_i2c_ee.h
 .\objects\bsp_tim.o: ..\..\User\BSP\Huoer_exti\Huoer_exti.h
 .\objects\bsp_tim.o: ..\..\User\BSP\485\bsp_modbusrtu.h
-.\objects\bsp_tim.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\bsp_tim.o: ..\..\User\BSP\light_sensor\bsp_light_exit.h
 .\objects\bsp_tim.o: ..\..\User\BSP\iwdg\bsp_iwdg.h
 .\objects\bsp_tim.o: ..\..\User\BSP\AdvanceTim\bsp_AdvanceTim.h

@@ -36,7 +36,7 @@ void dt_send2(uint16_t a,uint8_t b);//»Ø¸´010DÖ¸Áî
 
 static void jiasu(u8 j)
 {
-	if(j >= 0)
+	if(j > 0)
 	{
 		if(j<=10)
 		{
@@ -51,11 +51,11 @@ static void jiasu(u8 j)
 
 static void jiansu(u8 j)
 {
-	if(j >= 0)
+	if(j > 0)
 	{
 		if(j<=10)
 		{
-			data=10 - j;
+			data= 10 - j;
 		  dt_send(data,5);
 			Motor_Speed_Set(j);
 		}

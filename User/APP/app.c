@@ -321,14 +321,14 @@ static  void  AppTask_3 ( void * p_arg )//加减速转向
 	
 	while(1)
 	{
-		if(Speed_cache_flag == 1)
-		{
-			Speed_cache_flag = 0;
-			Speed_cache();
-			OSTimeDly ( 5000, OS_OPT_TIME_DLY, & err );
-			EXTI->IMR |= HUOER_INT_EXTI_LINE;//开启中断
-			EXTI->IMR |= HUOER1_INT_EXTI_LINE;//开启中断
-		}
+//		if(Speed_cache_flag == 1)
+//		{
+//			Speed_cache_flag = 0;
+//			Speed_cache();
+//			OSTimeDly ( 5000, OS_OPT_TIME_DLY, & err );
+//			EXTI->IMR |= HUOER_INT_EXTI_LINE;//开启中断
+//			EXTI->IMR |= HUOER1_INT_EXTI_LINE;//开启中断
+//		}
 		OSTimeDly ( 200, OS_OPT_TIME_DLY, & err );
 	
 	}
@@ -348,8 +348,7 @@ static  void  AppTask_4 ( void * p_arg )//电量监测
 	
 	while(1)
 	{
-		Electricity_monitoring();//电量监测函数
-		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );
+		//Electricity_monitoring();//电量监测函数
 		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );
 	}
 		
@@ -364,12 +363,12 @@ static  void  AppTask_4 ( void * p_arg )//电量监测
 
 static  void  AppTask_5 ( void * p_arg )//485通信发送
 {
-  
+  OS_ERR      err;
 	(void)p_arg;
-	
 	while(1)
 	{
-		Data_485();
+		Modbus_tx();
+		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );//延时2s调度	
 	}
 		
 }
@@ -379,7 +378,7 @@ static  void  AppTask_5 ( void * p_arg )//485通信发送
 *                                          6 TASK
 *********************************************************************************************************
 */
-static  void  AppTask_6 ( void * p_arg )//485通信接收、看门狗
+static  void  AppTask_6 ( void * p_arg )//看门狗
 {
   
 	OS_ERR      err;
@@ -389,7 +388,6 @@ static  void  AppTask_6 ( void * p_arg )//485通信接收、看门狗
 	
 	while(1)
 	{
-		modbus_rx();
 		OSTimeDly ( 20, OS_OPT_TIME_DLY, & err );//延时20ms调度
 		//IWDG_Feed();//喂狗
 	}

@@ -30,3 +30,6 @@
 .\objects\bsp_ds18b20.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 .\objects\bsp_ds18b20.o: ..\..\Libraries\FWlib\inc\misc.h
 .\objects\bsp_ds18b20.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_ds18b20.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_ds18b20.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_ds18b20.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

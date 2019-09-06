@@ -31,5 +31,6 @@
 .\objects\bsp_modbusrtu.o: ..\..\Libraries\FWlib\inc\misc.h
 .\objects\bsp_modbusrtu.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\bsp_modbusrtu.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_modbusrtu.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\bsp_modbusrtu.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\bsp_modbusrtu.o: ..\..\User\BSP\485\crc16.h

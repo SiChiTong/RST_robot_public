@@ -11,6 +11,7 @@
 #include "bsp_led.h"
 #include "crc16.h"
 #include "bsp_485.h"
+#include "stm32f10x_it.h"
 
 
 //////将eeprom进行分块
@@ -22,15 +23,60 @@
 extern volatile uint8_t ucTcpClosedFlag;
 extern uint8_t wifi_link_Status;
 extern uint8_t tcp_link_Status;
+
 uint8_t U = 0; //电量百分比定义
 uint8_t U_flag = 0;//电量是否计算flag定义
+u8 USART2_RX_BUF[128];
 
-//char   macUser_ESP8266_ApSsid_eeprom[32]=  "";                     //要连接的热点的名称
-//char   macUser_ESP8266_ApPwd_eeprom [16] = "";                     //要连接的热点的密钥
-//char   macUser_ESP8266_TcpServer_IP_eeprom[16]= "";                 //要连接的服务器的 IP
-//char   macUser_ESP8266_TcpServer_Port_eeprom[8]= "";                //要连接的服务器的端口
+/*电池参数结构体变量*/
+struct{
+        u16 Bettery_current_charge;  		//充电电流
+        u16 Bettery_current_discharge;  //放电电流
+        u16 Bettery_current_voltage;  	//单节电压
+        u8 Bettery_current_temperature1;//温度1
+        u8 Bettery_current_temperature2;//温度2
+				u8 Bettery_current_temperature3;//温度3
+				u8 Bettery_current_temperature4;//温度4
+				u16 Bettery_work_status;        //工作状态
+				u16 Bettery_charge_count;       //充电次数
+				u16 Bettery_discharge_count;    //放电次数
+				float Bettery_Energy;           //剩余电量
+    } Bettery;
+
+/*WIFI参数结构体*/
+struct{
+	char   macUser_ESP8266_ApSsid_eeprom[32];         //要连接的热点的名称
+	char   macUser_ESP8266_ApPwd_eeprom [16];         //要连接的热点的密钥
+	char   macUser_ESP8266_TcpServer_IP_eeprom[16];   //要连接的服务器的IP
+	char   macUser_ESP8266_TcpServer_Port_eeprom[8];  //要连接的服务器的端口
+}WIFI;
+
+/*WIFI参数结构体*/
+struct{
+	uint8_t rtu_adress;           //地址
+	uint8_t rtu_function;          //功能
+	uint16_t rtu_register_adress; //寄存器
+	uint16_t rtu_register_number; //寄存器数量
+}Modbustx;
 
 
+
+//ASCII码转化对应数字函数
+u16 ascii_to_int(int ascii)
+{
+	if(ascii >= 65)
+	{
+		return ascii-65+10;
+	}
+	else
+	{
+		char *nptr = NULL;
+		u16 int16;
+		*nptr = (char)(ascii);
+		int16 = atoi(nptr);
+		return int16;
+	}
+}
 
 /**
   * @brief  ESP8266 （Sta Tcp Client）透传
@@ -261,65 +307,155 @@ void Electricity_monitoring(void)
 }
 
 
-void Data_485(void)//modbus指令发送函数
+void Modbus_tx(void)//modbus指令发送函数
 {
-	OS_ERR      err;
-	
-	
-	uint8_t rtu_adress = 01;//地址
-	uint8_t rtu_function =03;//功能
-	uint16_t rtu_register_adress = 14;//寄存器
-	uint16_t rtu_register_number = 01;//寄存器数量
-	
-	
-	modbusrtu_send(&rtu_adress,&rtu_function,&rtu_register_adress,&rtu_register_number);//485采集
-
-	OSTimeDly ( 10000, OS_OPT_TIME_DLY, & err );//延时10s调度	
+	Modbustx.rtu_adress = 01;           //地址
+	Modbustx.rtu_function =03;          //功能
+	Modbustx.rtu_register_adress = 14;  //寄存器
+	Modbustx.rtu_register_number = 01;  //寄存器数量
+	modbusrtu_send(&Modbustx.rtu_adress,&Modbustx.rtu_function,&Modbustx.rtu_register_adress,&Modbustx.rtu_register_number);//Modbus指令
 }
 
-//modbus接受检测函数
+//modbus接受函数
 void modbus_rx(void)
 {
-	
-	OS_ERR      err;
-	
-	extern u8 RX485_flag1;
 	u8 USART2_RX_DATA[64];
-	extern u8 USART2_RX_BUF[64];
   u8 length =0;
 	u8 i =0;
-	extern u8 RX485_flag1;
+	
 	extern u8 USART2_RX_CNT;
 		
-	if(RX485_flag1 == 1)
+	while(1)	
+	{			
+			USART2_RX_DATA[length] = USART2_RX_BUF[length];//赋值到数组
+			length++;
+			if(USART2_RX_CNT == length)
+			{
+				break;
+			}								
+	}
+	printf("接收到Modbus指令:");
+	while(1)
 	{
-				OSTimeDly ( 20, OS_OPT_TIME_DLY, & err );
-				while(1)	
-				{			
-						USART2_RX_DATA[length] = USART2_RX_BUF[length];//赋值到数组
-						length++;
-						if(USART2_RX_CNT == length)
-						{
-							break;
-						}								
-				}
-				printf("接收到数据:");
-				while(1)
-				{
-						printf("%02X ",USART2_RX_DATA[i]);	
-						i++;
-						USART2_RX_CNT--;
-						if(USART2_RX_CNT == 0)
-						{
-								break;
-						}
+			printf("%02X ",USART2_RX_DATA[i]);	
+			i++;
+			USART2_RX_CNT--;
+			if(USART2_RX_CNT == 0)
+			{
+				break;
+			}
 								
-				}
-				printf("\n");	
-				memset(USART2_RX_BUF,0,sizeof(USART2_RX_BUF));//清空数组
-				RX485_flag1 = 0;//接收标志位置零	
-		}	
-  
+	}
+	printf("\n");	
+	memset(USART2_RX_BUF,0,sizeof(USART2_RX_BUF));//清空数组
+					 
 }
+
+//电池通讯查询指令
+void Battery_tx(void)
+{
+	u8 i = 0;
+	unsigned char str_buf[14];
+	
+	str_buf[0] =  0x3A;
+	str_buf[1] =  0x30;
+	str_buf[2] =  0x30;
+	str_buf[3] =  0x30;
+	str_buf[4] =  0x32;
+	str_buf[5] =  0x35;
+	str_buf[6] =  0x30;
+	str_buf[7] =  0x30;
+	str_buf[8] =  0x30;
+	str_buf[9] =  0x30;
+	str_buf[10] = 0x45;
+	str_buf[11] = 0x30;
+	str_buf[12] = 0x33;
+	str_buf[13] = 0x7E;
+	
+	RS485_Usart_SendArray(RS485_USARTx,str_buf,14);
+	printf("发送数据：");
+	for(i=0; i<14; i++)
+  {  
+	    printf("%02X ",str_buf[i]);	
+  }
+	printf("\n");		
+}
+
+
+//电池通讯接收解析函数
+void Battery_rx(void)
+{
+	extern u8 USART2_RX_CNT;
+	
+	u8 USART2_RX_DATA[128];
+	u8 length =0;
+	u8 i =0;
+	
+	if(USART2_RX_BUF[0] == 0x3A && USART2_RX_BUF[1] == 0x38)
+	{
+		while(true)	
+		{			
+				USART2_RX_DATA[length] = USART2_RX_BUF[length];//赋值到数组
+				length++;
+				if(USART2_RX_CNT == length)
+				{
+					break;
+				}								
+		}
+		printf("接收到Modbus指令:");
+		while(true)
+		{
+				printf("%02X ",USART2_RX_DATA[i]);	
+				i++;
+				USART2_RX_CNT--;
+				if(USART2_RX_CNT == 0)
+				{
+					break;
+				}
+									
+		}
+		printf("\n");	
+		memset(USART2_RX_BUF,0,sizeof(USART2_RX_BUF));//清空数组			
+			
+		//Vcell[]，第86、87、88、89位，代表单节电池电压，单位mV
+		Bettery.Bettery_current_voltage = ascii_to_int(USART2_RX_DATA[85])*4096+ascii_to_int(USART2_RX_DATA[86])*256+ascii_to_int(USART2_RX_DATA[87])*16+ascii_to_int(USART2_RX_DATA[88]);
+		//CURR[0],第90/91/92/93位,代表充电电流，单位10mA
+		Bettery.Bettery_current_charge = ascii_to_int(USART2_RX_DATA[89])*4096+ascii_to_int(USART2_RX_DATA[90])*256+ascii_to_int(USART2_RX_DATA[91])*16+ascii_to_int(USART2_RX_DATA[92]);
+		//CURR[1],第94/95/96/97位，代表放电电流，单位10mA
+		Bettery.Bettery_current_discharge = ascii_to_int(USART2_RX_DATA[93])*4096+ascii_to_int(USART2_RX_DATA[94])*256+ascii_to_int(USART2_RX_DATA[95])*16+ascii_to_int(USART2_RX_DATA[96]);
+		//4个温度，第98/99/100/101/102/103/104/105位，单位摄氏度
+		Bettery.Bettery_current_temperature1 = ascii_to_int(USART2_RX_DATA[97])*16+ascii_to_int(USART2_RX_DATA[98])-40;
+		Bettery.Bettery_current_temperature2 = ascii_to_int(USART2_RX_DATA[99])*16+ascii_to_int(USART2_RX_DATA[100])-40;
+		Bettery.Bettery_current_temperature3 = ascii_to_int(USART2_RX_DATA[101])*16+ascii_to_int(USART2_RX_DATA[102])-40;
+		Bettery.Bettery_current_temperature4 = ascii_to_int(USART2_RX_DATA[103])*16+ascii_to_int(USART2_RX_DATA[104])-40;
+		//工作状态，第106/107/108/109位   
+		/*说明 uint16 CING:1; //充电状态，1 充电 0 无充电 （最低位 LSB）
+				uint16 DING:1; //放电状态 1 放电，0 无放电
+				uint16 VoltH:1; //过压保护， 1，报警， 0 为正常
+				uint16 VoltL:1; //过放保护， 1，报警， 0 为正常
+				uint16 CurrC:1; //充电过流， 1，报警， 0 为正常
+				uint16 CurrS:1; //短路保护， 1，报警， 0 为正常
+				uint16 CurrD1:1;//放电过流一，1，报警， 0 为正常
+				uint16 CurrD2:1;//放电过流二，1，报警， 0 为正常
+				uint16 TempCH:1;//充电高温， 1，报警， 0 为正常
+				uint16 TempCL:1;//充电低温， 1，报警， 0 为正常
+				uint16 TempDH:1;//放电高温 1，报警， 0 为正常
+				uint16 TempDL:1;//放电低温 1，报警， 0 为正常
+				uint16 DFET:1; //放电开关状态， 1，打开 0 为关闭
+				uint16 CFET:1; //充电开关状态， 1，打开 0 为关闭
+				uint16 resv1:1 //保留位 1
+				uint16 resv2:1;//保留位 2 （最高位 MSB） */
+		Bettery.Bettery_work_status = ascii_to_int(USART2_RX_DATA[105])*4096+ascii_to_int(USART2_RX_DATA[106])*256+ascii_to_int(USART2_RX_DATA[107])*16+ascii_to_int(USART2_RX_DATA[108]);
+		//第115/116/117/118位,充电次数
+		Bettery.Bettery_charge_count = ascii_to_int(USART2_RX_DATA[114])*4096+ascii_to_int(USART2_RX_DATA[115])*256+ascii_to_int(USART2_RX_DATA[116])*16+ascii_to_int(USART2_RX_DATA[117]);
+		//第119/120/121/122位，放电次数
+		Bettery.Bettery_discharge_count = ascii_to_int(USART2_RX_DATA[118])*4096+ascii_to_int(USART2_RX_DATA[119])*256+ascii_to_int(USART2_RX_DATA[120])*16+ascii_to_int(USART2_RX_DATA[121]);
+		//第123/124位，剩余电量，单位10%
+		Bettery.Bettery_Energy = (ascii_to_int(USART2_RX_DATA[122])*16+ascii_to_int(USART2_RX_DATA[123]))*0.1;
+	}
+}
+		
+		
+
 
 

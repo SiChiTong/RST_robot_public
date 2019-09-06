@@ -161,18 +161,18 @@ CPU_INT32U  BSP_CPU_ClkFreq_MHz;
 void  BSP_Init (void)
 {
 	USART_Config();//串口打印
-	ADVANCE_TIM_Init();
-	//GENERAL_TIM4_Init();//帧检验定时器中断
-	//EXTI_HUOER_Config();//霍尔感应
+	RS485_USART_Config();//485
+	ADVANCE_TIM8_Init();//检测pwm输入
+	EXTI_HUOER_Config();//霍尔感应
 	EXTI_LIGHT_Config();//充电光电感应
 	LED_Init();//LED
-	RS485_USART_Config();//485
 	I2C_EE_Init();//EEPROM读写
 	Delay_Tim5_Init();//TIM4定时器，用于延时
 	ADCx_Init();	//ADC
 	DS18B20_Init();//DS18B20温度传感器
 	ESP8266_Init();//ESP8266WIFI模块
 	TIMx_Breathing_Init();
+	ADVANCE_TIM1_Init();//帧检验定时器中断
 	printf("初始化完成...\n");
 }
 

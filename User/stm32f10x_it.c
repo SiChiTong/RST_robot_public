@@ -43,9 +43,8 @@ extern uint32_t S;
 extern __IO uint16_t ADC_ConvertedValue;
 extern float ADC_ConvertedValueLocal;
 extern uint8_t cw;
-u8 USART2_RX_BUF[64];
+extern u8 USART2_RX_BUF[128];
 u8 USART2_RX_CNT = 0;
-u8 RX485_flag1 = 0;
 u16 count_value = 0;
 u32 count_quan_value = 0;
 u32 Tim_counter=0;
@@ -157,7 +156,7 @@ void LIGHT_IRQHandler(void)
 void ADVANCE_TIM_IRQHandler(void)
 {
   /* 清除中断标志位 */
-  TIM_ClearITPendingBit(ADVANCE_TIM, TIM_IT_CC1);
+  TIM_ClearITPendingBit(ADVANCE_TIM8, TIM_IT_CC1);
 	count_value++;
 	if(count_value == 675)
 	{
@@ -170,12 +169,18 @@ void ADVANCE_TIM_IRQHandler(void)
 
 }
 
-
-
-
-
-
-
+//帧数据中断检测
+void ADVANCE_TIM1_IRQHandler(void)
+{
+	if (TIM_GetITStatus(ADVANCE_TIM1, TIM_IT_Update) != RESET)
+	{
+		/*完成接收*/
+		modbus_rx();
+		Battery_rx();
+		TIM_Cmd(ADVANCE_TIM1, DISABLE);
+		TIM_ClearITPendingBit(ADVANCE_TIM1, TIM_IT_Update);
+	}	
+}
 
 
 // 串口中断服务函数
@@ -183,11 +188,12 @@ void RS485_USART_IRQHandler(void)
 {
 	 if(USART_GetITStatus(RS485_USARTx,USART_IT_RXNE) != RESET) 
 			{ 
+				TIM_Cmd(ADVANCE_TIM1, ENABLE);
+				//计数器CNT->0
+				ADVANCE_TIM1->CNT = 0;
 				USART_ClearITPendingBit(RS485_USARTx,USART_IT_RXNE);				
-				RX485_flag1 = 1;
 				USART2_RX_BUF[USART2_RX_CNT] = USART_ReceiveData(RS485_USARTx); 
 				USART2_RX_CNT++; 			
-				
 			}		
 }
 

@@ -58,10 +58,11 @@
 .\objects\bsp_task.o: ..\..\User\BSP\pwm\bsp_tim_pwm.h
 .\objects\bsp_task.o: ..\..\User\BSP\bsp_adc\bsp_adc.h
 .\objects\bsp_task.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_task.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_task.o: ..\..\User\BSP\TIM\bsp_tim.h
 .\objects\bsp_task.o: ..\..\User\BSP\ds18b20\bsp_ds18b20.h
 .\objects\bsp_task.o: ..\..\User\BSP\Huoer_exti\Huoer_exti.h
 .\objects\bsp_task.o: ..\..\User\BSP\485\bsp_modbusrtu.h
-.\objects\bsp_task.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\bsp_task.o: ..\..\User\BSP\light_sensor\bsp_light_exit.h
 .\objects\bsp_task.o: ..\..\User\BSP\iwdg\bsp_iwdg.h
 .\objects\bsp_task.o: ..\..\User\BSP\AdvanceTim\bsp_AdvanceTim.h
@@ -70,3 +71,4 @@
 .\objects\bsp_task.o: ..\..\User\uCOS-III\Source\os_type.h
 .\objects\bsp_task.o: ..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView\os_cpu.h
 .\objects\bsp_task.o: ..\..\User\BSP\485\crc16.h
+.\objects\bsp_task.o: ..\..\User\stm32f10x_it.h

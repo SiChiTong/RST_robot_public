@@ -1,24 +1,7 @@
-/**
-  ******************************************************************************
-  * @file    bsp_usart.c
-  * @author  fire
-  * @version V1.0
-  * @date    2013-xx-xx
-  * @brief   重定向c库printf函数到usart端口
-  ******************************************************************************
-  * @attention
-  *
-  * 实验平台:秉火STM32 F103-霸道 开发板  
-  * 论坛    :http://www.firebbs.cn
-  * 淘宝    :http://firestm32.taobao.com
-  *
-  ******************************************************************************
-  */ 
+
 	
 #include "bsp_485.h"
 
-
-u8 flagFrame=0;                         //帧接收完成标志，即接收到一帧新数据
 
  /**
   * @brief  配置嵌套向量中断控制器NVIC
@@ -76,7 +59,6 @@ void RS485_USART_Config(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(RS485_USART_EN_GPIO_PORT, &GPIO_InitStructure);
 	
-	
 	// 配置串口的工作参数
 	// 配置波特率
 	USART_InitStructure.USART_BaudRate = RS485_USART_BAUDRATE;
@@ -87,8 +69,7 @@ void RS485_USART_Config(void)
 	// 配置校验位
 	USART_InitStructure.USART_Parity = USART_Parity_No ;
 	// 配置硬件流控制
-	USART_InitStructure.USART_HardwareFlowControl = 
-	USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	// 配置工作模式，收发一起
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	// 完成串口的初始化配置
@@ -100,11 +81,9 @@ void RS485_USART_Config(void)
 	// 使能串口接收中断
 	USART_ITConfig(RS485_USARTx, USART_IT_RXNE, ENABLE);	
 
-	
 	// 使能串口
 	USART_Cmd(RS485_USARTx, ENABLE);	    
-		
-	
+
 	RS485_RX_ENABLE;
 }
 
@@ -113,10 +92,8 @@ void RS485_USART_Config(void)
 /*****************  发送一个字节 **********************/
 void RS485_Usart_SendByte( USART_TypeDef * pUSARTx, uint8_t ch)
 {	
-
 	/* 发送一个字节数据到USART */
 	USART_SendData(pUSARTx,ch);
-		
 	/* 等待发送数据寄存器为空 */
 	while (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	
 }
@@ -125,9 +102,7 @@ void RS485_Usart_SendByte( USART_TypeDef * pUSARTx, uint8_t ch)
 void RS485_Usart_SendArray( USART_TypeDef * pUSARTx, uint8_t *array, uint16_t num)
 {
   uint8_t i;
-	
 	RS485_TX_ENABLE;
-	
 	for(i=0; i<num; i++)
   {
 	    /* 发送一个字节数据到USART */
@@ -136,7 +111,6 @@ void RS485_Usart_SendArray( USART_TypeDef * pUSARTx, uint8_t *array, uint16_t nu
   }
 	/* 等待发送完成 */
 	while(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET);
-	
 	RS485_RX_ENABLE;
 	
 }
@@ -145,9 +119,7 @@ void RS485_Usart_SendArray( USART_TypeDef * pUSARTx, uint8_t *array, uint16_t nu
 void RS485_Usart_SendString( USART_TypeDef * pUSARTx, char *str)
 {
 	unsigned int k=0;
-	
-		RS485_TX_ENABLE;
-
+	RS485_TX_ENABLE;
   do 
   {
       RS485_Usart_SendByte( pUSARTx, *(str + k) );
@@ -156,8 +128,7 @@ void RS485_Usart_SendString( USART_TypeDef * pUSARTx, char *str)
   
   /* 等待发送完成 */
   while(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET)
-  {}
-		
+  {}	
 	RS485_RX_ENABLE;
 }
 
@@ -167,19 +138,18 @@ void RS485_Usart_SendString( USART_TypeDef * pUSARTx, char *str)
 void RS485_Usart_SendHalfWord( USART_TypeDef * pUSARTx, uint16_t ch)
 {
 	uint8_t temp_h, temp_l;
-	
+	RS485_TX_ENABLE;
 	/* 取出高八位 */
 	temp_h = (ch&0XFF00)>>8;
 	/* 取出低八位 */
 	temp_l = ch&0XFF;
-	
 	/* 发送高八位 */
 	USART_SendData(pUSARTx,temp_h);	
 	while (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);
-	
 	/* 发送低八位 */
 	USART_SendData(pUSARTx,temp_l);	
 	while (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	
+	RS485_RX_ENABLE;
 }
 
 

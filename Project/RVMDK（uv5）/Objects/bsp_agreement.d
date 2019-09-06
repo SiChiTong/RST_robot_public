@@ -56,12 +56,13 @@
 .\objects\bsp_agreement.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\bsp_adc\bsp_adc.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\TIM\bsp_tim.h
+.\objects\bsp_agreement.o: ..\..\User\BSP\485\bsp_485.h
+.\objects\bsp_agreement.o: ..\..\User\BSP\TIM\bsp_tim.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\ds18b20\bsp_ds18b20.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\task\bsp_task.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\i2c\bsp_i2c_ee.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\Huoer_exti\Huoer_exti.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\485\bsp_modbusrtu.h
-.\objects\bsp_agreement.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\light_sensor\bsp_light_exit.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\iwdg\bsp_iwdg.h
 .\objects\bsp_agreement.o: ..\..\User\BSP\AdvanceTim\bsp_AdvanceTim.h

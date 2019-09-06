@@ -17,6 +17,7 @@ void modbusrtu_send(uint8_t *rtu_adress,uint8_t *rtu_function,uint16_t *rtu_regi
 	uint8_t i =0;
 	unsigned char str_buf[8];
 	
+	
 	rtu_register_adress1 = ((*rtu_register_adress)&0XFF00)>>8;//取出高八位
 	rtu_register_adress2 = (*rtu_register_adress)&0X00FF;//取出低八位
 	
@@ -32,19 +33,15 @@ void modbusrtu_send(uint8_t *rtu_adress,uint8_t *rtu_function,uint16_t *rtu_regi
 	
 	//生成校验码
 	rtu_crc16 = crc16(str_buf,6);
-	
 	rtu_crc16_2 = (rtu_crc16&0XFF00)>>8;
 	rtu_crc16_1 = (rtu_crc16&0X00FF);
-	
 	str_buf[6] = rtu_crc16_1;
 	str_buf[7] = rtu_crc16_2;
-	
 	RS485_Usart_SendArray(RS485_USARTx,str_buf,8);
-	printf("发送数据：");
+	printf("发送Modbus指令：");
 	for(i=0; i<8; i++)
   {  
 	    printf("%02X ",str_buf[i]);	
   }
 	printf("\n");	
-	
 }
