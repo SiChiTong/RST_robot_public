@@ -68,3 +68,4 @@
 .\objects\bsp_tim_pwm.o: ..\..\User\APP\os_cfg.h
 .\objects\bsp_tim_pwm.o: ..\..\User\uCOS-III\Source\os_type.h
 .\objects\bsp_tim_pwm.o: ..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView\os_cpu.h
+.\objects\bsp_tim_pwm.o: ..\..\User\BSP\Variable\bsp_variable.h

@@ -47,6 +47,7 @@
 ".\objects\bsp_iwdg.o"
 ".\objects\bsp_task.o"
 ".\objects\bsp_advancetim.o"
+".\objects\bsp_variable.o"
 ".\objects\cpu_core.o"
 ".\objects\cpu_a.o"
 ".\objects\cpu_c.o"

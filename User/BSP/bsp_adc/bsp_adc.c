@@ -1,10 +1,5 @@
 #include "bsp_adc.h"
 
-__IO uint16_t ADC_ConvertedValue;
-float ADC_ConvertedValueLocal;
-float vi = 0;
-
-
 /**
   * @brief  ADC GPIO ≥ı ºªØ
   * @param  Œﬁ

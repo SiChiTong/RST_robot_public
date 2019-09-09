@@ -11,7 +11,7 @@
 #define      macUser_ESP8266_ApSsid                       "RST"                //要连接的热点的名称
 #define      macUser_ESP8266_ApPwd                        "RST88888"           //要连接的热点的密钥
 
-#define      macUser_ESP8266_TcpServer_IP                 "192.168.1.100"      //要连接的服务器的 IP
+#define      macUser_ESP8266_TcpServer_IP                 "www.chengdurst.work"      //要连接的服务器的 IP
 #define      macUser_ESP8266_TcpServer_Port               "7000"               //要连接的服务器的端口
 
 

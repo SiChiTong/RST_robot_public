@@ -18,16 +18,9 @@
 #include "bsp_i2c_ee.h"
 #include "bsp_usart.h"		
 
-
-
-
 uint16_t EEPROM_ADDRESS;
-
 static __IO uint32_t  I2CTimeout = I2CT_LONG_TIMEOUT;   
-
-
 static uint32_t I2C_TIMEOUT_UserCallback(uint8_t errorCode);
-
 
 /**
   * @brief  I2C I/O≈‰÷√

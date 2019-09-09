@@ -65,7 +65,6 @@ void LED_Init ( void )
 	macLED3_OFF();
 	cw_OFF();
 	Charge_ON();//充电继电器使能低电平
-	
 }
 
 

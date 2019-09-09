@@ -31,43 +31,15 @@
 #include <string.h> 
 #include "Huoer_exti.h"
 #include "bsp_led.h"
-#include "bsp_adc.h"
 #include "includes.h"
 #include "bsp_485.h"
 #include "bsp_light_exit.h"
-
-
-
-uint8_t Speed_cache_flag =0;
-extern uint32_t S;
-extern __IO uint16_t ADC_ConvertedValue;
-extern float ADC_ConvertedValueLocal;
-extern uint8_t cw;
-extern u8 USART2_RX_BUF[128];
-u8 USART2_RX_CNT = 0;
-u16 count_value = 0;
-u32 count_quan_value = 0;
-u32 Tim_counter=0;
-/** @addtogroup STM32F10x_StdPeriph_Template
-  * @{
-  */
-
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
-
-/******************************************************************************/
-/*            Cortex-M3 Processor Exceptions Handlers                         */
-/******************************************************************************/
+#include "bsp_variable.h"
 
 
 //wifi中断函数
 void macESP8266_USART_INT_FUN ( void )
 {	
-	extern volatile uint8_t ucTcpClosedFlag;
 	uint8_t ucCh;
 	
 	if ( USART_GetITStatus ( macESP8266_USARTx, USART_IT_RXNE ) != RESET )
@@ -85,7 +57,7 @@ void macESP8266_USART_INT_FUN ( void )
 		
 		ucCh = USART_ReceiveData( macESP8266_USARTx );                                                             
 	
-		ucTcpClosedFlag = strstr ( strEsp8266_Fram_Record .Data_RX_BUF, "CLOSED\r\n" ) ? 1 : 0;
+		WIFI.ucTcpClosedFlag = strstr ( strEsp8266_Fram_Record .Data_RX_BUF, "CLOSED\r\n" ) ? 1 : 0;
 		
   }	
 }
@@ -98,11 +70,11 @@ void HUOER_IRQHandler(void)
   //确保是否产生了EXTI Line中断
  if(EXTI_GetITStatus(HUOER_INT_EXTI_LINE) != RESET) 
  {
-	 Speed_cache_flag = 1;
+	 Robot.interrupt_flag = 1;
 	 EXTI->IMR &= ~(HUOER1_INT_EXTI_LINE);//屏蔽外部中断
 	 EXTI->IMR &= ~(HUOER_INT_EXTI_LINE);//屏蔽外部中断
-	 S = 0;
-	EXTI_ClearITPendingBit(HUOER_INT_EXTI_LINE); //清除中断标志
+	 Robot.distance = 0;
+	 EXTI_ClearITPendingBit(HUOER_INT_EXTI_LINE); //清除中断标志
 	 
  }  
 }
@@ -119,10 +91,10 @@ void HUOER1_IRQHandler(void)
   //确保是否产生了EXTI Line中断
  if(EXTI_GetITStatus(HUOER1_INT_EXTI_LINE) != RESET) 
  {
-	 Speed_cache_flag = 1;
+	 Robot.interrupt_flag = 1;
 	 EXTI->IMR &= ~(HUOER_INT_EXTI_LINE);//屏蔽外部中断
 	 EXTI->IMR &= ~(HUOER1_INT_EXTI_LINE);//屏蔽外部中断
-	 S = 680;
+	 Robot.distance = 680;
 	 EXTI_ClearITPendingBit(HUOER1_INT_EXTI_LINE);     
  }  
 }
@@ -155,12 +127,14 @@ void LIGHT_IRQHandler(void)
  */
 void ADVANCE_TIM_IRQHandler(void)
 {
+	u32 count_quan_value = 0;
+	u16 count_value = 0;
   /* 清除中断标志位 */
   TIM_ClearITPendingBit(ADVANCE_TIM8, TIM_IT_CC1);
 	count_value++;
 	if(count_value == 675)
 	{
-		if(cw == 1)
+		if(Robot.drection == 1)
 		{
 		count_quan_value++;
 		count_value = 0;
@@ -192,8 +166,8 @@ void RS485_USART_IRQHandler(void)
 				//计数器CNT->0
 				ADVANCE_TIM1->CNT = 0;
 				USART_ClearITPendingBit(RS485_USARTx,USART_IT_RXNE);				
-				USART2_RX_BUF[USART2_RX_CNT] = USART_ReceiveData(RS485_USARTx); 
-				USART2_RX_CNT++; 			
+				Usart485.USART2_RX_BUF[Usart485.USART2_RX_CNT] = USART_ReceiveData(RS485_USARTx); 
+				Usart485.USART2_RX_CNT++; 			
 			}		
 }
 
@@ -206,7 +180,7 @@ void ADC_IRQHandler(void)
 	if (ADC_GetITStatus(ADCx,ADC_IT_EOC)==SET) 
 	{
 		// 读取ADC的转换值
-		ADC_ConvertedValue = ADC_GetConversionValue(ADCx);
+		ADC_V.ConvertedValue = ADC_GetConversionValue(ADCx);
 	}
 	ADC_ClearITPendingBit(ADCx,ADC_IT_EOC);
 }
@@ -217,6 +191,7 @@ void ADC_IRQHandler(void)
 //脉冲计数数，pwm发生中断函数
 void  BRE_TIMx_IRQHandler (void)
 {
+	u32 Tim_counter=0;
 	extern uint8_t cw;
 	if ( TIM_GetITStatus( BRE_TIMx, TIM_IT_Update) != RESET ) 
 	{	
@@ -225,13 +200,13 @@ void  BRE_TIMx_IRQHandler (void)
 			if(Tim_counter == 4000)//4000个脉冲
 			{
 				Tim_counter = 0;
-				if(cw == 1)
+				if(Robot.drection == 1)
 				{
-					S += 2;
+					Robot.distance += 2;
 				}
 				else
 				{
-					S -= 2;
+					Robot.distance -= 2;
 				}
 			}
 		

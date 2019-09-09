@@ -85,10 +85,8 @@ void USART_Config(void)
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	// 完成串口的初始化配置
 	USART_Init(DEBUG_USARTx, &USART_InitStructure);
-	
 	// 串口中断优先级配置
 	NVIC_Configuration();
-	
 	// 使能串口接收中断
 	USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, ENABLE);	
 	

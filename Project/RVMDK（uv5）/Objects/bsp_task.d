@@ -72,3 +72,4 @@
 .\objects\bsp_task.o: ..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView\os_cpu.h
 .\objects\bsp_task.o: ..\..\User\BSP\485\crc16.h
 .\objects\bsp_task.o: ..\..\User\stm32f10x_it.h
+.\objects\bsp_task.o: ..\..\User\BSP\Variable\bsp_variable.h

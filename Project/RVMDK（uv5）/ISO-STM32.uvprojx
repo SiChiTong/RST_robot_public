@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\Libraries\FWlib\inc;..\..\User;..\..\User\APP;..\..\User\BSP;..\..\User\BSP\led;..\..\User\uC-CPU;..\..\User\uC-CPU\ARM-Cortex-M3\RealView;..\..\User\uC-LIB;..\..\User\uCOS-III\Source;..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView;..\..\User\BSP\pwm;..\..\User\BSP\usart;..\..\User\BSP\ESP8266;..\..\User\BSP\Common;..\..\User\BSP\Huoer_exti;..\..\User\BSP\TIM;..\..\User\BSP\bsp_adc;..\..\User\BSP\ds18b20;..\..\User\BSP\Agreement;..\..\User\BSP\i2c;..\..\User\BSP\Distance_exti;..\..\User\BSP\485;..\..\User\BSP\light_sensor;..\..\User\BSP\iwdg;..\..\User\BSP\task;..\..\User\BSP\AdvanceTim</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\Libraries\FWlib\inc;..\..\User;..\..\User\APP;..\..\User\BSP;..\..\User\BSP\led;..\..\User\uC-CPU;..\..\User\uC-CPU\ARM-Cortex-M3\RealView;..\..\User\uC-LIB;..\..\User\uCOS-III\Source;..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView;..\..\User\BSP\pwm;..\..\User\BSP\usart;..\..\User\BSP\ESP8266;..\..\User\BSP\Common;..\..\User\BSP\Huoer_exti;..\..\User\BSP\TIM;..\..\User\BSP\bsp_adc;..\..\User\BSP\ds18b20;..\..\User\BSP\Agreement;..\..\User\BSP\i2c;..\..\User\BSP\Distance_exti;..\..\User\BSP\485;..\..\User\BSP\light_sensor;..\..\User\BSP\iwdg;..\..\User\BSP\task;..\..\User\BSP\AdvanceTim;..\..\User\BSP\Variable</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -714,6 +714,11 @@
               <FileName>bsp_AdvanceTim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\AdvanceTim\bsp_AdvanceTim.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_variable.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\Variable\bsp_variable.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -17,7 +17,6 @@ void modbusrtu_send(uint8_t *rtu_adress,uint8_t *rtu_function,uint16_t *rtu_regi
 	uint8_t i =0;
 	unsigned char str_buf[8];
 	
-	
 	rtu_register_adress1 = ((*rtu_register_adress)&0XFF00)>>8;//取出高八位
 	rtu_register_adress2 = (*rtu_register_adress)&0X00FF;//取出低八位
 	

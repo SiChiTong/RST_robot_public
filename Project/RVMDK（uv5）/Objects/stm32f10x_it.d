@@ -37,7 +37,6 @@
 .\objects\stm32f10x_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\Huoer_exti\Huoer_exti.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\led\bsp_led.h
-.\objects\stm32f10x_it.o: ..\..\User\BSP\bsp_adc\bsp_adc.h
 .\objects\stm32f10x_it.o: ..\..\User\APP\includes.h
 .\objects\stm32f10x_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\stm32f10x_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
@@ -56,6 +55,7 @@
 .\objects\stm32f10x_it.o: ..\..\User\BSP\bsp.h
 .\objects\stm32f10x_it.o: ..\..\User\APP\app_cfg.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\usart\bsp_usart.h
+.\objects\stm32f10x_it.o: ..\..\User\BSP\bsp_adc\bsp_adc.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\TIM\bsp_tim.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\485\bsp_485.h
 .\objects\stm32f10x_it.o: ..\..\User\BSP\TIM\bsp_tim.h
@@ -70,3 +70,4 @@
 .\objects\stm32f10x_it.o: ..\..\User\APP\os_cfg.h
 .\objects\stm32f10x_it.o: ..\..\User\uCOS-III\Source\os_type.h
 .\objects\stm32f10x_it.o: ..\..\User\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView\os_cpu.h
+.\objects\stm32f10x_it.o: ..\..\User\BSP\Variable\bsp_variable.h
