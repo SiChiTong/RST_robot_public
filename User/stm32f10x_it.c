@@ -149,7 +149,7 @@ void ADVANCE_TIM1_IRQHandler(void)
 	if (TIM_GetITStatus(ADVANCE_TIM1, TIM_IT_Update) != RESET)
 	{
 		/*完成接收*/
-		modbus_rx();
+		//modbus_rx();
 		Battery_rx();
 		TIM_Cmd(ADVANCE_TIM1, DISABLE);
 		TIM_ClearITPendingBit(ADVANCE_TIM1, TIM_IT_Update);

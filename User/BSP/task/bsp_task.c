@@ -13,6 +13,7 @@
 #include "bsp_485.h"
 #include "stm32f10x_it.h"
 #include "bsp_variable.h"
+#include <stdlib.h>
 
 
 uint8_t U_flag = 0;//电量是否计算flag定义
@@ -20,7 +21,7 @@ uint8_t U = 0; //电量百分比定义
 
 
 //ASCII码转化对应数字函数
-u16 ascii_to_int(int ascii)
+u8 ascii_to_int(u8 ascii)
 {
 	if(ascii >= 65)
 	{
@@ -29,10 +30,12 @@ u16 ascii_to_int(int ascii)
 	else
 	{
 		char *nptr = NULL;
-		u16 int16;
-		*nptr = (char)(ascii);
-		int16 = atoi(nptr);
-		return int16;
+		u8 int8 = 0;
+		char char1;
+		char1 = (char)(ascii);
+		nptr = &char1;
+		int8 = atoi(nptr);
+		return int8;
 	}
 }
 
@@ -309,47 +312,40 @@ void Battery_tx(void)
 //电池通讯接收解析函数
 void Battery_rx(void)
 {
-	u8 USART2_RX_DATA[128];
-	u8 length =0;
+	u8 USART2_RX_DATA[200];
+  u8 j =0;
 	u8 i =0;
 	
-	if(Usart485.USART2_RX_BUF[0] == 0x3A && Usart485.USART2_RX_BUF[1] == 0x38)
+	if(Usart485.USART2_RX_BUF[0] == 0x3A && Usart485.USART2_RX_BUF[1] == 0x30)
 	{
 		while(true)	
 		{			
-				USART2_RX_DATA[length] = Usart485.USART2_RX_BUF[length];//赋值到数组
-				length++;
-				if(Usart485.USART2_RX_CNT == length)
+				USART2_RX_DATA[j] = Usart485.USART2_RX_BUF[j];//赋值到数组
+				j++;
+				if(Usart485.USART2_RX_CNT == j)
 				{
+					Usart485.USART2_RX_CNT = 0;
 					break;
 				}								
 		}
-		printf("接收到Modbus指令:");
-		while(true)
-		{
-				printf("%02X ",USART2_RX_DATA[i]);	
-				i++;
-				Usart485.USART2_RX_CNT--;
-				if(Usart485.USART2_RX_CNT == 0)
-				{
-					break;
-				}
-									
-		}
-		printf("\n");	
-		memset(Usart485.USART2_RX_BUF,0,sizeof(Usart485.USART2_RX_BUF));//清空数组			
-			
+//		printf("接收到Modbus指令:");
+//		for(;i < j;i++)
+//		{
+//			printf("%02X ",USART2_RX_DATA[i]);			
+//		}
+//		printf("\n");	
+		memset(&Usart485.USART2_RX_BUF,0,sizeof(Usart485.USART2_RX_BUF));//清空数组				
 		//Vcell[]，第86、87、88、89位，代表单节电池电压，单位mV
-		Battery.current_voltage = ascii_to_int(USART2_RX_DATA[85])*4096+ascii_to_int(USART2_RX_DATA[86])*256+ascii_to_int(USART2_RX_DATA[87])*16+ascii_to_int(USART2_RX_DATA[88]);
+		Battery.current_voltage = ascii_to_int(USART2_RX_DATA[25])*4096+ascii_to_int(USART2_RX_DATA[26])*256+ascii_to_int(USART2_RX_DATA[27])*16+ascii_to_int(USART2_RX_DATA[28]);
 		//CURR[0],第90/91/92/93位,代表充电电流，单位10mA
-		Battery.current_charge = ascii_to_int(USART2_RX_DATA[89])*4096+ascii_to_int(USART2_RX_DATA[90])*256+ascii_to_int(USART2_RX_DATA[91])*16+ascii_to_int(USART2_RX_DATA[92]);
+		Battery.current_charge = (ascii_to_int(USART2_RX_DATA[89])*4096+ascii_to_int(USART2_RX_DATA[90])*256+ascii_to_int(USART2_RX_DATA[91])*16+ascii_to_int(USART2_RX_DATA[92]))*10;
+		
 		//CURR[1],第94/95/96/97位，代表放电电流，单位10mA
-		Battery.current_discharge = ascii_to_int(USART2_RX_DATA[93])*4096+ascii_to_int(USART2_RX_DATA[94])*256+ascii_to_int(USART2_RX_DATA[95])*16+ascii_to_int(USART2_RX_DATA[96]);
+		Battery.current_discharge = (ascii_to_int(USART2_RX_DATA[93])*4096+ascii_to_int(USART2_RX_DATA[94])*256+ascii_to_int(USART2_RX_DATA[95])*16+ascii_to_int(USART2_RX_DATA[96]))*10;
+		
 		//4个温度，第98/99/100/101/102/103/104/105位，单位摄氏度
-		Battery.current_temperature1 = ascii_to_int(USART2_RX_DATA[97])*16+ascii_to_int(USART2_RX_DATA[98])-40;
+		Battery.current_temperature1 = ascii_to_int(USART2_RX_DATA[97])*16+ascii_to_int(USART2_RX_DATA[98])-40;	
 		Battery.current_temperature2 = ascii_to_int(USART2_RX_DATA[99])*16+ascii_to_int(USART2_RX_DATA[100])-40;
-		Battery.current_temperature3 = ascii_to_int(USART2_RX_DATA[101])*16+ascii_to_int(USART2_RX_DATA[102])-40;
-		Battery.current_temperature4 = ascii_to_int(USART2_RX_DATA[103])*16+ascii_to_int(USART2_RX_DATA[104])-40;
 		//工作状态，第106/107/108/109位   
 		/*说明 uint16 CING:1; //充电状态，1 充电 0 无充电 （最低位 LSB）
 				uint16 DING:1; //放电状态 1 放电，0 无放电
@@ -368,12 +364,26 @@ void Battery_rx(void)
 				uint16 resv1:1 //保留位 1
 				uint16 resv2:1;//保留位 2 （最高位 MSB） */
 		Battery.work_status = ascii_to_int(USART2_RX_DATA[105])*4096+ascii_to_int(USART2_RX_DATA[106])*256+ascii_to_int(USART2_RX_DATA[107])*16+ascii_to_int(USART2_RX_DATA[108]);
-		//第115/116/117/118位,充电次数
-		Battery.charge_count = ascii_to_int(USART2_RX_DATA[114])*4096+ascii_to_int(USART2_RX_DATA[115])*256+ascii_to_int(USART2_RX_DATA[116])*16+ascii_to_int(USART2_RX_DATA[117]);
-		//第119/120/121/122位，放电次数
-		Battery.discharge_count = ascii_to_int(USART2_RX_DATA[118])*4096+ascii_to_int(USART2_RX_DATA[119])*256+ascii_to_int(USART2_RX_DATA[120])*16+ascii_to_int(USART2_RX_DATA[121]);
-		//第123/124位，剩余电量，单位10%
-		Battery.energy = (ascii_to_int(USART2_RX_DATA[122])*16+ascii_to_int(USART2_RX_DATA[123]))*0.1;
+		
+		//第116/117/118/119位,充电次数
+		Battery.charge_count = ascii_to_int(USART2_RX_DATA[115])*4096+ascii_to_int(USART2_RX_DATA[116])*256+ascii_to_int(USART2_RX_DATA[117])*16+ascii_to_int(USART2_RX_DATA[118]);
+	
+		//第120/121/122/123位，放电次数
+		Battery.discharge_count = ascii_to_int(USART2_RX_DATA[119])*4096+ascii_to_int(USART2_RX_DATA[120])*256+ascii_to_int(USART2_RX_DATA[121])*16+ascii_to_int(USART2_RX_DATA[122]);
+		
+		//第124/125位，剩余电量，单位1%
+		Battery.energy = (ascii_to_int(USART2_RX_DATA[123])*16+ascii_to_int(USART2_RX_DATA[124]));
+		printf("电池状态更新：\n");
+		printf("单节电压:：%dmV\n", Battery.current_voltage);
+		printf("充电电流：%dmA\n", Battery.current_charge);
+		printf("放电电流：%dmA\n", Battery.current_discharge);
+		printf("温度1：%d℃\n", Battery.current_temperature1);
+		printf("温度2：%d℃\n", Battery.current_temperature2);
+		printf("工作状态：%d\n", Battery.work_status);
+		printf("充电次数：%d\n", Battery.charge_count);
+		printf("放电次数：%d\n", Battery.discharge_count);
+		printf("剩余电量：%d%%\n", Battery.energy);
+		
 	}
 }
 		

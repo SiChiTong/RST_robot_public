@@ -283,7 +283,7 @@ static  void  AppTask_1 ( void * p_arg )//wifi启动、通讯
 		{   
       OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );	
 			macLED1_ON();			
-			Link_start();		
+			//Link_start();		
     }			
 }
 
@@ -301,7 +301,7 @@ static  void  AppTask_2 ( void * p_arg )//实时数据上传
 	while(1)
 	{
 		OSTimeDly ( 5000, OS_OPT_TIME_DLY, & err );
-		real_time_data();	
+		//real_time_data();	
 	}	
 }
 
@@ -367,8 +367,9 @@ static  void  AppTask_5 ( void * p_arg )//485通信发送
 	(void)p_arg;
 	while(1)
 	{
-		Modbus_tx();
-		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );//延时2s调度	
+		Battery_tx();
+		//Modbus_tx();
+		OSTimeDly ( 4000, OS_OPT_TIME_DLY, & err );//延时2s调度	
 	}
 		
 }
@@ -388,7 +389,7 @@ static  void  AppTask_6 ( void * p_arg )//看门狗
 	
 	while(1)
 	{
-		OSTimeDly ( 20, OS_OPT_TIME_DLY, & err );//延时20ms调度
+		OSTimeDly ( 2000, OS_OPT_TIME_DLY, & err );//延时20ms调度
 		//IWDG_Feed();//喂狗
 	}
 		

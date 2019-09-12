@@ -3,7 +3,7 @@
 
 /*初始化所有变量*/
 
-struct battery Battery = {0,0,0,0,0,0,0,0,0,0,0};
+struct battery Battery = {0,0,0,0,0,0,0,0,0};
 struct modbustx Modbustx = {0,0,0,0};
 struct robot Robot = {0,0,1,10,0,0,0,0};
 struct usart Usart485 = {{0},0};

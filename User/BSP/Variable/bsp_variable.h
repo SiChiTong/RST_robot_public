@@ -9,12 +9,10 @@ extern struct battery {
         u16 current_voltage;  	//单节电压
         u8 current_temperature1;//温度1
         u8 current_temperature2;//温度2
-				u8 current_temperature3;//温度3
-				u8 current_temperature4;//温度4
 				u16 work_status;        //工作状态
 				u16 charge_count;       //充电次数
 				u16 discharge_count;    //放电次数
-				float energy;           //剩余电量
+				u8 energy;           //剩余电量
  }Battery;
 
 		/*MODBUS参数结构体*/
@@ -40,7 +38,7 @@ extern struct robot{
 
 /*串口通信参数结构体*/
 extern struct usart{
-	u8 USART2_RX_BUF[128];    //接受数组
+	u8 USART2_RX_BUF[200];    //接受数组
 	u8 USART2_RX_CNT;    	   //数组计数值
 }Usart485;
 

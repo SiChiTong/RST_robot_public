@@ -29,6 +29,7 @@ void Electricity_monitoring(void);
 void Modbus_tx(void);
 void modbus_rx(void);
 void Battery_rx(void);
+void Battery_tx(void);
 
 void                      dt_send2               (uint16_t a,uint8_t b);//a代表数据位b代表指令
 
